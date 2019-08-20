@@ -1,0 +1,234 @@
+<html>
+   <title>Web Socket Test</title>
+  <body>
+    <h2>Web Socket Test</h2>
+   
+     
+  <form>
+        <button type="button" onclick="document.getElementById('demo').innerHTML =  testWebSocket();">Click me to connect</button>   
+    </form>
+    
+    <table id="table" border="1">
+        <tr>
+            <th>Selling Price</th>
+            <th>Buying Price</th>
+            <th>Currency</th>
+            <th>count</th>
+        </tr> 
+    </table>
+
+
+ 
+  <script language="javascript" type="text/javascript">
+
+
+   
+
+
+
+  var wsUri = "ws://localhost:8084/ServerAllCurrency_Copy2/server";
+  var output;
+  
+  var xUsd,yUsd;
+  var xEur,yEur;
+  var xJpy,yJpy;
+  var xHkd,yHkd;
+  
+  var countUsd=0;
+  var countEur=0;
+  var countHkd=0;
+  var countJpy=0;
+  var row,cell1,cell2,cell3,cell4;
+  
+ function init()
+ {
+   output = document.getElementById("output");
+ }
+
+ function testWebSocket()
+ {
+    websocket = new WebSocket(wsUri);
+     
+    websocket.onopen = function(evt) { onOpen(evt) };
+    websocket.onclose = function(evt) { onClose(evt) };
+    websocket.onmessage = function(evt)
+    {
+        onMessage1(evt);
+        onMessage2(evt);
+    }
+    websocket.onerror = function(evt) { onError(evt) }; 
+ }
+
+
+
+
+
+
+
+
+
+
+    function onMessage1(evt)
+    {
+        var obj1=JSON.parse(evt.data);
+        xUsd=obj1.BuyingPriceUsd;
+        yUsd=obj1.SellingPriceUsd;
+        
+        
+        var obj2=JSON.parse(evt.data);
+        xEur=obj2.BuyingPriceEur;
+        yEur=obj2.SellingPriceEur;
+        
+        var obj3=JSON.parse(evt.data);
+        xJpy=obj3.BuyingPriceJpy;
+        yJpy=obj3.SellingPriceJpy;
+        
+        var obj4=JSON.parse(evt.data);
+        xHkd=obj4.BuyingPriceHkd;
+        yHkd=obj4.SellingPriceHkd;
+        
+        
+        table=document.getElementById("table");
+        
+        if(typeof xUsd!=='undefined')
+        { 
+            row = table.insertRow(1);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell4 = row.insertCell(3);
+            cell1.innerHTML = xUsd;
+            cell2.innerHTML = yUsd;
+            cell3.innerHTML = "usd";
+            cell4.innerHTML = countUsd;
+            countUsd++;
+            
+          
+        }
+      
+  
+    
+       
+
+
+        if(typeof xEur!=='undefined')
+        {
+            row = table.insertRow(2);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell4 = row.insertCell(3);
+            cell1.innerHTML = xEur;
+            cell2.innerHTML = yEur;
+            cell3.innerHTML = "eur";
+            cell4.innerHTML = countEur; 
+            countEur++;
+            
+            
+            
+        }  
+        
+  
+   
+       
+        
+       
+        
+        if(typeof xJpy!=='undefined')
+        {
+            row = table.insertRow(3);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell4 = row.insertCell(3);
+            cell1.innerHTML = xJpy;
+            cell2.innerHTML = yJpy;
+            cell3.innerHTML = "jpy";
+            cell4.innerHTML = countJpy;
+            countJpy++;
+            
+            
+        }
+       
+  
+        
+        
+       
+        if(typeof xHkd!=='undefined')
+        {
+            row = table.insertRow(4);
+            cell1 = row.insertCell(0);
+            cell2 = row.insertCell(1);
+            cell3 = row.insertCell(2);
+            cell4 = row.insertCell(3);
+            cell1.innerHTML = xHkd;
+            cell2.innerHTML = yHkd;
+            cell3.innerHTML = "Hkd";
+            cell4.innerHTML = countHkd;
+            countHkd++;
+            
+           
+        }
+        
+        
+            
+  
+    }  
+    
+    
+    function onMessage2(evt)
+    {
+            if(typeof xUsd!=='undefined' && typeof xEur==='undefined')
+            {
+                table.deleteRow(2);
+            }
+        
+            if(typeof xEur!=='undefined' && typeof xJpy==='undefined')
+            {
+                table.deleteRow(3);
+                table.deleteRow(4);
+            }
+        
+            if(typeof xJpy!=='undefined' && typeof xHkd==='undefined')
+            {
+                table.deleteRow(4);
+                table.deleteRow(5);
+                table.deleteRow(6);
+            }
+        
+            if(typeof xHkd!=='undefined')
+            {
+                table.deleteRow(5);
+                table.deleteRow(6);
+                table.deleteRow(7);
+                table.deleteRow(8);
+            }
+    }
+   
+  
+    
+  function onError(evt){}
+  function doSend(message){}
+  function onOpen(evt){}
+  function onClose(evt)
+  {
+    writeToScreen("DISCONNECTED");
+      document.getElementById(elementID).innerHTML = "";
+      websocket.close();
+  }
+  function writeToScreen(message)
+  {
+     
+    var pre = document.createElement("p");
+    pre.innerHTML = message;
+        output.appendChild(pre);
+     
+  }
+ 
+  window.addEventListener("load", init, false);
+
+  </script>
+  <div id="output"></div>
+  </body>
+
+</html>
